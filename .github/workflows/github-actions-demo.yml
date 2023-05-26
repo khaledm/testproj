@@ -4,6 +4,7 @@ on: [push]
 jobs:
   check-bats-version:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -14,6 +15,7 @@ jobs:
       - run: bats -v
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+    needs: [check-bats-version]
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
