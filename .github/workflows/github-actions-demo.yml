@@ -1,7 +1,17 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is testing out and learning GitHub Actions 🚀
 on: [push]
 jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm insall -g bats
+      - run: bats -v
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
