@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - run: npm insall -g bats
+      - run: npm install -g bats
       - run: bats -v
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
