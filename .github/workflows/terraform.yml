@@ -1,6 +1,7 @@
 name: 'Terraform Plan'
 
-on: pull_request
+on:
+  pull_request:
 
 env:
   TF_LOG: INFO
