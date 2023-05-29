@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+terraform/remote_setup/.terraform/providers/registry.terraform.io/integrations/github/4.31.0/windows_amd64/terraform-provider-github_v4.31.0.exe
+terraform/remote_setup/.terraform/providers/registry.terraform.io/hashicorp/random/3.5.1/windows_amd64/terraform-provider-random_v3.5.1_x5.exe
+terraform/remote_setup/.terraform/providers/registry.terraform.io/hashicorp/azurerm/2.99.0/windows_amd64/terraform-provider-azurerm_v2.99.0_x5.exe
+terraform/remote_setup/.terraform/providers/registry.terraform.io/hashicorp/azuread/2.39.0/windows_amd64/terraform-provider-azuread_v2.39.0_x5.exe
+terraform/remote_setup/terraform.tfstate.backup
+.vscode/launch.json
+.vscode/tasks.json
