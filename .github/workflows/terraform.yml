@@ -4,10 +4,7 @@ on: [push, pull_request]
 
 env:
   TF_LOG: INFO
-  TF_CLOUD_ORGANIZATION: "innoventity"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-  TF_WORKSPACE: "learn-terraform-github-actions"
-  CONFIG_DIRECTORY: "./main"
 
 jobs:
   terraform:
@@ -33,6 +30,11 @@ jobs:
         terraform_version: 1.0.10 # terraform CLI version
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+
     - name: Terraform Init
       id: init
       env:
@@ -45,34 +47,28 @@ jobs:
         CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
       run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP"
 
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
 
     # Run a terraform plan for pull requests only
-    - name: Upload Configuration
-      uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
-      id: plan-upload
-      with:
-        workspace: ${{ env.TF_WORKSPACE }}
-        directory: ${{ env.CONFIG_DIRECTORY }}
-        speculative: true
+    # - name: Upload Configuration
+    #   uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
+    #   id: plan-upload
+    #   with:
+    #     workspace: ${{ env.TF_WORKSPACE }}
+    #     directory: ${{ env.CONFIG_DIRECTORY }}
+    #     speculative: true
 
     - name: Terraform Plan
-      if: github.event_name == 'pull_request'
-      uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.0
-      id: plan-run
-      with:
-          workspace: ${{ env.TF_WORKSPACE }}
-          configuration_version: ${{ steps.plan-upload.outputs.configuration_version_id }}
-          plan_only: true
-
-    #  id: plan
-    #  env:
-    #    ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-    #    ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-    #   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-    #    ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-
-    # if: github.event_name == 'pull_request' 
-    #  run: terraform plan -no-color
+      id: plan
+      env:
+       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      if: github.event_name == 'pull_request' 
+      run: terraform plan -no-color
     
     # Add a comment to pull requests with plan results
     - name: add-plan-comment
